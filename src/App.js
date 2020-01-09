@@ -94,7 +94,12 @@ function App() {
                 <h3>Projects</h3>
                 <ul>
                   {projects.map(name =>
-                    <li onClick={() => setProject(name)}>{name}</li>)}
+                    <li 
+                      className={name === project ? 'active' : ''}
+                      onClick={() => setProject(name)}
+                    >
+                      {name}
+                    </li>)}
                 </ul>
               </div>
             </Paper>
