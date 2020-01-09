@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import './App.css';
+import './App.scss';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
+import { Card, Paper, Grid } from '@material-ui/core';
 
 const ENDPOINT = 'http://localhost:3001/';
 
@@ -61,8 +62,16 @@ function App() {
     try {
       const [_, file, n, match] = /([^:]+):(\d+):\s*(.*)/.exec(line);
 
-      return <a class="real"
-        href={`https://github.com/rapid7/${submitted.project}/blob/master/${file}#L${n}}`}><span class="file">{file}</span><span class="line">#{n}</span>: <kbd class="match">{match}</kbd></a>
+      return (
+        <a 
+          class="real"
+          href={`https://github.com/rapid7/${submitted.project}/blob/master/${file}#L${n}}`}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+            <span class="file">{file}</span><span class="line">#{n}</span>: <kbd class="match">{match}</kbd>
+        </a>
+      )
     } catch (ex) {
       try {
         const [_, file, n, match] = /([^:]+)-(\d+)-\s*(.*)/.exec(line);
@@ -78,45 +87,89 @@ function App() {
   return (
     <main>
       <ThemeProvider theme={theme}>
-        <div id="projects">
-          <ul>
-            {projects.map(name =>
-              <li onClick={() => setProject(name)}>{name}</li>)}
-          </ul>
-        </div>
-        <div id="content">
-          <div id="search">
-            <form onSubmit={submit}>
-              <TextField
-                className="query"
-                type="text"
-                value={query}
-                minLength="3"
-                onChange={e => setQuery(e.target.value)}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={submit}>Search</Button>
-            </form>
-          </div>
-          <div id="results">
-            {error ? <div class="error">{error}</div> :
-              <div class="results">
+        <Grid container spacing={3}>
+          <Grid item xs={2}>
+            <Paper>
+              <div id="projects">
+                <h3>Projects</h3>
                 <ul>
-                  {(results || '').split('\n--\n').map(result =>
-                    <li class="result">
-                      <ul data-raw={result}>
-                        {result.split(/\n+/).filter(x => !!x).map(line =>
-                          <li>{formatLine(line)}</li>)}
-                      </ul>
-                    </li>
-                  )}
+                  {projects.map(name =>
+                    <li 
+                      className={name === project ? 'active' : ''}
+                      onClick={() => setProject(name)}
+                    >
+                      {name}
+                    </li>)}
                 </ul>
               </div>
-            }
-          </div>
-        </div>
+            </Paper>
+          </Grid>
+          <Grid item xs={10}>
+            <Paper>
+              <div id="content">
+                <div id="search">
+                  <form onSubmit={submit}>
+                    <TextField
+                      className="query"
+                      type="text"
+                      value={query}
+                      placeholder="Search for some code.."
+                      minLength="3"
+                      onChange={e => setQuery(e.target.value)}
+                    />
+                    {query &&
+                      <Button
+                        style={{marginRight: '10px'}}
+                        variant="contained"
+                        color="default"
+                        onClick={() => {
+                          setQuery('');
+                          setResults([]);
+                        }}
+                      >
+                          Clear
+                      </Button>
+                    }
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={submit}
+                    >
+                        Search
+                    </Button>
+                  </form>
+                </div>
+                {error || (results && results.length > 0) ?
+                  <div id="results">
+                    {error ? <div class="error">{error}</div> :
+                      <div class="results">
+                        <ul>
+                          {(results || '').split('\n--\n').map(result =>
+                            <Card
+                              style={{
+                                marginBottom: '10px',
+                                padding: '10px'
+                              }}
+                            >
+                              <li class="result">
+                                <ul data-raw={result}>
+                                  {result.split(/\n+/).filter(x => !!x).map(line =>
+                                    <li>{formatLine(line)}</li>)
+                                  }
+                                </ul>
+                              </li>
+                            </Card>
+                          )}
+                        </ul>
+                      </div>
+                    }
+                  </div> :
+                  null
+              }
+              </div>
+            </Paper>
+          </Grid>
+        </Grid>
       </ThemeProvider>
     </main>
   );
