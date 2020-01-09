@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.scss';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import orange from '@material-ui/core/colors/orange';
 import { Card, Paper, Grid } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
 const ENDPOINT = 'http://localhost:3001/';
 
@@ -18,19 +19,10 @@ const theme = createMuiTheme({
   },
 });
 
-const projects = [
-  'cerberus',
-  'logentries-leserver',
-  'platform-js',
-  'shuflr-js',
-  'pipr-js',
-  'logentries-lemeta',
-  'logentries-lehitman',
-  'logentries-leabacus'
-];
-
 function App() {
   const [ project, setProject ] = useState(null);
+  const [ projects, setProjects ] = useState([]);
+  const [ newProject, setNewProject ] = useState(null);
   const [ query, setQuery ] = useState('');
   const [ results, setResults ] = useState(null);
   const [ error, setError ] = useState(null);
@@ -38,6 +30,19 @@ function App() {
     project: null,
     query: null
   });
+
+  useEffect(() => {
+    setProjects([
+      'cerberus',
+      'logentries-leserver',
+      'platform-js',
+      'shuflr-js',
+      'pipr-js',
+      'logentries-lemeta',
+      'logentries-lehitman',
+      'logentries-leabacus'
+    ]);
+  }, []);
 
   const submit = e => {
     e.preventDefault();
@@ -87,7 +92,7 @@ function App() {
   return (
     <main>
       <ThemeProvider theme={theme}>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           <Grid item xs={2}>
             <Paper>
               <div id="projects">
@@ -99,8 +104,44 @@ function App() {
                       onClick={() => setProject(name)}
                     >
                       {name}
-                    </li>)}
+                    </li>)
+                  }
                 </ul>
+                <Grid 
+                  container
+                  spacing={1}
+                  style={{
+                    padding: '10px'
+                  }}
+                >
+                  <Grid item xs={8}>
+                    <Paper>
+                      <TextField
+                        className="new-project"
+                        type="text"
+                        value={newProject}
+                        placeholder="New project"
+                        minLength="3"
+                        onChange={e => setNewProject(e.target.value)}
+                      />
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Paper>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setProjects([...projects, newProject]);
+                          setNewProject('');
+                        }}
+                      >
+                        <AddIcon />
+                      </Button>
+                    </Paper>
+                  </Grid>
+                </Grid>
               </div>
             </Paper>
           </Grid>
