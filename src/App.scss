@@ -1,0 +1,111 @@
+html, body {
+  font-family: 'Roboto', sans-serif;
+  background: rgb(51, 51, 51);
+  color: white;
+}
+
+main {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+#projects {
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 20px 0 20px 20px;
+  }
+  li {
+    cursor: pointer;
+  }
+  h3 {
+    text-align: center;
+    margin: 0;
+    padding-top: 10px;
+  }
+  min-width: 200px;
+  max-width: 25vw;
+}
+
+#content {
+  flex: 1;
+}
+
+#search form {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  gap: 10px;
+}
+
+#search form .query {
+  flex: 1;
+  margin-right: 20px;
+}
+
+#results {
+  overflow: auto;
+}
+
+.results ul {
+  padding: 0;
+}
+
+.results {
+  ul {
+     li {
+      list-style-type: none;
+     }
+  }
+}
+
+.results ul li a.real {
+  text-decoration: none;
+  color: black;
+}
+
+.results .match {
+  color: white;
+}
+
+.results ul li a.real .file {
+  color: orangered;
+}
+
+.results ul li a.real .line {
+  color: grey;
+}
+
+.results ul li a.real:hover .file {
+  text-decoration: underline;
+  text-decoration-color: grey;
+}
+
+.results ul li a.real:hover .line {
+  text-decoration: underline;
+  text-decoration-color: orangered;
+}
+
+.results ul li a.context {
+  text-decoration: none;
+  color: grey;
+}
+
+.results ul li a.context .file {
+  color: #A88;
+}
+
+.results ul li a.context .line {
+  color: #BBB;
+}
+
+.results ul li a.context:hover .file {
+  text-decoration: underline;
+  text-decoration-color: lightgrey;
+}
+
+.results ul li a.context:hover .line {
+  text-decoration: underline;
+  text-decoration-color: grey;
+}
